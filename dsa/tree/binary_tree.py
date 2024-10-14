@@ -37,6 +37,13 @@ class BinaryTree:
             if node.left:
                 stack.append(node.left)
 
+    def pre_order_traverse_iterator(self):
+        yield self.root
+        if self.root.left:
+            yield from BinaryTree(self.root.left).pre_order_traverse_iterator()
+        if self.root.right:
+            yield from BinaryTree(self.root.right).pre_order_traverse_iterator()
+
     def post_order_traverse(self, func: Callable):
         if self.root.left:
             BinaryTree(self.root.left).post_order_traverse(func)
@@ -57,6 +64,13 @@ class BinaryTree:
         while result:
             func(result.pop())
 
+    def post_order_traverse_iterator(self):
+        if self.root.left:
+            yield from BinaryTree(self.root.left).post_order_traverse_iterator()
+        if self.root.right:
+            yield from BinaryTree(self.root.right).post_order_traverse_iterator()
+        yield self.root
+
     def in_order_traverse(self, func: Callable):
         if self.root.left:
             BinaryTree(self.root.left).in_order_traverse(func)
@@ -76,6 +90,13 @@ class BinaryTree:
                 func(node)
                 node = node.right
 
+    def in_order_traverse_iterator(self):
+        if self.root.left:
+            yield from BinaryTree(self.root.left).in_order_traverse_iterator()
+        yield self.root
+        if self.root.right:
+            yield from BinaryTree(self.root.right).in_order_traverse_iterator()
+
     def level_order_traverse(self, func: Callable):
         queue = deque([self.root])
         while queue:
@@ -85,6 +106,42 @@ class BinaryTree:
                 queue.append(node.left)
             if node.right:
                 queue.append(node.right)
+
+    def level_order_traverse_iterator(self):
+        queue = deque([self.root])
+        while queue:
+            node = queue.popleft()
+            yield node
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+
+    def reverse_level_order_traverse(self, func: Callable):
+        queue = deque([self.root])
+        stack = []
+        while queue:
+            node = queue.popleft()
+            stack.append(node)
+            if node.right:
+                queue.append(node.right)
+            if node.left:
+                queue.append(node.left)
+        while stack:
+            func(stack.pop())
+
+    def reverse_level_order_traverse_iterator(self):
+        queue = deque([self.root])
+        stack = []
+        while queue:
+            node = queue.popleft()
+            stack.append(node)
+            if node.right:
+                queue.append(node.right)
+            if node.left:
+                queue.append(node.left)
+        while stack:
+            yield stack.pop()
 
     @staticmethod
     def _build_tree_from_pre_order_in_order(pre_order: list, in_order: list, pre_order_index: int, in_order_start: int, in_order_end: int) -> Node:
@@ -115,13 +172,27 @@ if __name__ == '__main__':
     binary_tree.pre_order_traverse(lambda node: print(node.value)) # 1 2 4 5 3 6 7
     print('Iterative Pre-order Traversal')
     binary_tree.pre_order_traverse_iterative(lambda node: print(node.value)) # 1 2 4 5 3 6 7
+    print('Pre-order Traversal Iterator')
+    for node in binary_tree.pre_order_traverse_iterator():
+        print(node.value) # 1 2 4 5 3 6 7
     print('Recursive Post-order Traversal')
     binary_tree.post_order_traverse(lambda node: print(node.value)) # 4 5 2 6 7 3 1
     print('Iterative Post-order Traversal')
     binary_tree.post_order_traverse_iterative(lambda node: print(node.value)) # 4 5 2 6 7 3 1
+    print('Post-order Traversal Iterator')
+    for node in binary_tree.post_order_traverse_iterator():
+        print(node.value) # 4 5 2 6 7 3 1
     print('Recursive In-order Traversal')
     binary_tree.in_order_traverse(lambda node: print(node.value)) # 4 2 5 1 6 3 7
     print('Iterative In-order Traversal')
     binary_tree.in_order_traverse_iterative(lambda node: print(node.value)) # 4 2 5 1 6 3 7
+    print('In-order Traversal Iterator')
+    for node in binary_tree.in_order_traverse_iterator():
+        print(node.value) # 4 2 5 1 6 3 7
     print('Level-order Traversal')
     binary_tree.level_order_traverse(lambda node: print(node.value)) # 1 2 3 4 5 6 7
+    print('Level-order Traversal Iterator')
+    for node in binary_tree.level_order_traverse_iterator():
+        print(node.value) # 1 2 3 4 5 6 7
+    print('Reverse level order traversal')
+    binary_tree.reverse_level_order_traverse(lambda node: print(node.value))

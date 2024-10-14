@@ -1,22 +1,25 @@
-# Find maximum element in a binary tree
-# Given a binary tree, find the maximum element in it.
-
-# Example:
-# Input:
-#       1
-#      / \
-#     2   3
-#    / \
-#   4   5
-# Output: 5
-
 from .binary_tree import BinaryTree
+from collections import deque
 
-def max_element_in_binary_tree(root: BinaryTree.Node) -> int:
-    if root is None:
-        return float('-inf')
-    return max(max_element_in_binary_tree(root.left), root.value, max_element_in_binary_tree(root.right))
-
+def level_with_max_sum(root: BinaryTree.Node) -> int:
+    max_sum = 0
+    max_sum_level = None
+    queue = deque([root])
+    level = 0
+    while queue:
+        level += 1
+        level_sum = 0
+        for _ in range(len(queue)):
+            node = queue.popleft()
+            level_sum += node.value
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+        if level_sum > max_sum:
+            max_sum = level_sum
+            max_sum_level = level
+    return max_sum_level
 
 if __name__ == '__main__':
     # Example 1
@@ -32,7 +35,7 @@ if __name__ == '__main__':
     root.left.set_left(BinaryTree.Node(4))
     root.left.set_right(BinaryTree.Node(5))
     binary_tree = BinaryTree(root)
-    assert max_element_in_binary_tree(binary_tree.root) == 5
+    assert level_with_max_sum(binary_tree.root) == 3
 
     # Example 2
     # Construct the binary tree:
@@ -51,6 +54,4 @@ if __name__ == '__main__':
     root.right.set_right(BinaryTree.Node(6))
     root.right.right.set_right(BinaryTree.Node(7))
     binary_tree = BinaryTree(root)
-    assert max_element_in_binary_tree(binary_tree.root) == 7
-    
-    print('All test cases passed successfully.')
+    assert level_with_max_sum(binary_tree.root) == 3
