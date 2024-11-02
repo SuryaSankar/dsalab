@@ -28,7 +28,7 @@ class Solution:
                  for end_idx in range(start_idx, len(numProducts)):
                     subarr_sum = numProducts[end_idx]
                     prev_val = numProducts[end_idx]
-                    for curr_idx in range(end_idx, start_idx -1 , -1):
+                    for curr_idx in range(end_idx - 1, start_idx -1 , -1):
                         val_to_add = min(numProducts[curr_idx], prev_val - 1)
                         if val_to_add <= 0:
                              break
@@ -47,3 +47,4 @@ if __name__ == '__main__':
     assert solution.max_from_n_piles([7, 4, 5, 2, 6, 5]) == 12
     assert solution.max_from_n_piles([2,9,4,7,5,2]) == 16
     assert solution.max_from_n_piles([7, 4, 5, 2, 6, 5, 12, 13, 8, 20]) == 53
+    print("All cases passed")

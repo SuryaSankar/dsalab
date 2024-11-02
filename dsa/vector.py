@@ -10,6 +10,7 @@ class Vector:
         return self._size
     
     def __getitem__(self, index):
+        print(f"Index {index}")
         assert index >= 0 and index < len(self), "Array subscript out of range"
         return self._theElements[index]
     
@@ -56,6 +57,10 @@ class Vector:
             result += str(self._theElements[i]) + " "
         return result
     
+    def __iter__(self):
+        for i in range(self._size):
+            yield self._theElements[i]
+    
 if __name__ == '__main__':
     vec = Vector()
     vec.append(1)
@@ -74,6 +79,7 @@ if __name__ == '__main__':
     print(vec)
     vec.remove(4)
     print(vec)
-
+    for elem in vec:
+        print(elem)
     
 
